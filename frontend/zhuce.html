@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="一起过新年 - 注册账号">
+    <link rel="shortcut icon" href="img/favicon.ico">
+    <title>注册账号</title>
+    <link rel="stylesheet" href="css/forms.css">
+    <link rel="stylesheet" href="css/zhuce.css">
+</head>
+<body>
+    <div class="login-box">
+        <h2>注册账号</h2>
+        <form id="registerForm">
+            <div class="user-box">
+                <input type="text" name="username" id="username" required="">
+                <label>用户名</label>
+            </div>
+            <div class="user-box">
+                <input type="password" name="pwd" id="pwd" required="">
+                <label>密码</label>
+            </div>
+            <!-- 确认密码 -->
+            <div class="user-box">
+                <input type="password" name="pwd2" id="pwd2" required="">
+                <label>确认密码</label>
+            </div>
+            <!-- 手机号+获取验证码行 -->
+            <div class="user-box phone-box">
+                <div class="phone-input">
+                    <input type="text" name="phone" id="phone" required="">
+                    <label>手机号</label>
+                </div>
+                <span class="code-btn" id="getCodeBtn">获取验证码</span>
+            </div>
+            <!-- 验证码输入框 -->
+            <div class="user-box">
+                <input type="text" name="verifyCode" id="verifyCode" required="">
+                <label>验证码</label>
+            </div>
+            <!-- 注册按钮居中容器 -->
+            <div class="register-btn-wrap">
+                <a href="#" class="register-btn" id="registerBtn">注册账号</a>
+            </div>
+            <div class="back-login">已有账号？<a href="denlu.html">返回登录</a></div>
+        </form>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/zhuce.js"></script>
+</body>
+</html>

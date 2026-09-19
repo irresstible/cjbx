@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="一起过新年 - 分享快乐，记录年俗故事" />
+    <link rel="shortcut icon" href="img/favicon.ico" />
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/index.css" />
+    <title>一起过新年</title>
+</head>
+<body>
+    <!-- 全屏翻转背景图 -->
+    <div class="page-flip">
+        <div class="page-flip__inner">
+            <div class="page-flip__item page-flip__item--first">
+                <img src="img/bg1.jpg" alt="新年背景1" />
+            </div>
+            <div class="page-flip__item page-flip__item--second">
+                <img src="img/bg2.png" alt="新年背景2" />
+            </div>
+        </div>
+    </div>
+
+    <!-- 页面内容 -->
+    <div class="page-content">
+        <div class="main-page wrapper">
+            <div class="page-header wrapper">
+                <ul>
+                    <li><a href="#" data-img="img/n1.jpg">psyche.yao</a></li>
+                    <li><a href="#" data-img="img/n2.jpg">逮到一只白熊</a></li>
+                    <li><a href="#" data-img="img/n3.jpg">超级无敌帅男.YYJ</a></li>
+                    <li><a href="#" data-img="img/n4.jpg">浅望繇</a></li>
+                    <!-- 用户头像 + 用户名 -->
+                    <li>
+                        <a href="user.html" class="user-info">
+                            <img src="img/favicon.ico" alt="头像" class="user-avatar" id="navAvatar">
+                            <span class="user-name" id="navUsername">我的主页</span>
+                        </a>
+                    </li>
+                    <li><a href="denlu.html" target="_blank">登录|注册</a></li>
+                </ul>
+            </div>
+
+            <div class="text-content wrapper">
+                <div class="text-content__container">
+                    <div class="text-content__left">
+                        <h2>psyche.yao</h2>
+                        <p>一起过新年，分享快乐</p>
+                        <h2>逮到一只白熊</h2>
+                        <p>一起过新年，分享快乐</p>
+                    </div>
+                    <div class="text-content__right">
+                        <h2>超级无敌帅男.YYJ</h2>
+                        <p>一起过新年，分享快乐</p>
+                        <h2>浅望繇</h2>
+                        <p>一起过新年，分享快乐</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-footer wrapper">
+            <div class="page-footer__box">
+                <p>©2026 一起过新年 版权所有</p>
+                <p>联系我们 | 隐私政策 | 网站说明</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 图片弹窗 -->
+    <div id="img-modal">
+        <span class="img-modal__close" id="imgModalClose">×</span>
+        <img id="img-modal__pic" />
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>

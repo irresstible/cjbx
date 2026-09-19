@@ -1,0 +1,139 @@
+/* ====== 表单页面公共样式 ====== */
+/* 登录、注册、忘记密码页面共用 */
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-box {
+    width: 420px;
+    padding: 40px;
+    background: rgba(0, 0, 0, .5);
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    border-radius: 10px;
+}
+
+.login-box h2 {
+    margin: 0 0 30px;
+    color: #fff;
+    text-align: center;
+    font-size: 32px;
+}
+
+/* ====== 输入框 ====== */
+.user-box {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.user-box input {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #fff;
+    border: none;
+    border-bottom: 1px solid #fff;
+    outline: none;
+    background: transparent;
+    transition: border-color 0.4s;
+}
+
+.user-box input:focus {
+    border-bottom: 1px solid #03e9f4;
+}
+
+.user-box label {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    font-size: 16px;
+    color: #ffffff;
+    pointer-events: none;
+    transition: all 0.4s ease-in-out;
+}
+
+.user-box input:focus ~ label,
+.user-box input:valid ~ label {
+    top: -18px;
+    left: 0;
+    color: #03e9f4;
+    font-size: 13px;
+}
+
+/* ====== 手机号 + 验证码行 ====== */
+.phone-box {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.phone-input {
+    flex: 1;
+    position: relative;
+}
+
+.code-btn {
+    color: #b0b0b0;
+    font-size: 14px;
+    white-space: nowrap;
+    padding-bottom: 8px;
+    cursor: pointer;
+}
+
+/* ====== 提交按钮 ====== */
+.register-btn-wrap,
+.login-btn-wrap {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.register-btn,
+.login-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    color: #03e9f4;
+    font-size: 22px;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    transition: 0.5s;
+}
+
+.register-btn:hover,
+.login-btn:hover {
+    background: #03e9f4;
+    color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #03e9f4,
+                0 0 25px #03e9f4,
+                0 0 50px #03e9f4;
+}
+
+/* ====== 底部链接 ====== */
+.back-login,
+.back-register {
+    margin-top: 25px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.back-login a,
+.back-register a {
+    color: #03e9f4;
+    text-decoration: none;
+}
+
+.back-login a:hover,
+.back-register a:hover {
+    text-shadow: 0 0 8px #03e9f4;
+}

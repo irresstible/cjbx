@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="一起过新年 - 重置密码">
+    <link rel="shortcut icon" href="img/favicon.ico">
+    <title>忘记密码</title>
+    <link rel="stylesheet" href="css/forms.css">
+    <link rel="stylesheet" href="css/wangji.css">
+</head>
+<body>
+    <div class="login-box">
+        <h2>重置密码</h2>
+        <form id="resetForm">
+            <div class="user-box">
+                <input type="text" name="phone" id="phone" required="">
+                <label>手机号</label>
+            </div>
+            <!-- 验证码行 -->
+            <div class="user-box phone-box">
+                <div class="phone-input">
+                    <input type="text" name="verifyCode" id="verifyCode" required="">
+                    <label>验证码</label>
+                </div>
+                <span class="code-btn" id="getCodeBtn">获取验证码</span>
+            </div>
+            <div class="user-box">
+                <input type="password" name="newPwd" id="newPwd" required="">
+                <label>新密码</label>
+            </div>
+            <div class="user-box">
+                <input type="password" name="newPwd2" id="newPwd2" required="">
+                <label>确认新密码</label>
+            </div>
+            <div class="register-btn-wrap">
+                <a href="#" class="register-btn" id="resetBtn">重置密码</a>
+            </div>
+            <div class="back-login">想起密码了？<a href="denlu.html">返回登录</a></div>
+        </form>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/wangji.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "cjbx-backend",
+  "version": "1.0.0",
+  "description": "一起过新年 - 登录注册后端服务",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^18.0.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2"
+  }
+}
