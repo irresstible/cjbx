@@ -1,0 +1,13 @@
+name = "wdbx-cjbx"
+main = "worker/index.js"
+compatibility_date = "2025-01-01"
+
+assets = { directory = "./frontend", binding = "ASSETS" }
+
+[[kv_namespaces]]
+binding = "APP_DATA"
+id = "b5eed9bf4d0b4eecb5137b8e58283a0b"
+
+[[routes]]
+pattern = "wdbx.cjbx.dpdns.org/*"
+zone_name = "cjbx.dpdns.org"

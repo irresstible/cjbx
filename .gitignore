@@ -18,3 +18,9 @@ Thumbs.db
 
 # 日志
 *.log
+
+# Cloudflare Wrangler 缓存
+.wrangler/
+
+# 临时截图
+cloudflare_challenge*.png

@@ -1,0 +1,12 @@
+{
+  "devDependencies": {
+    "wrangler": "^4.135.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true,
+    "workerd@1.20260918.1": true
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3"
+  }
+}
