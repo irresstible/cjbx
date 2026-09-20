@@ -1,32 +1,37 @@
-// ====== 验证码 ======
+/**
+ * 注册页入口
+ */
+import { apiPost } from '../api.js';
+import { PHONE_REGEX } from '../config.js';
+import { showToast } from '../ui/toast.js';
+import { setBtnLoading, resetBtnState } from '../ui/button.js';
+import { setupPasswordToggle, bindVerifyCodeButton } from '../ui/form.js';
+
+const usernameInput = document.getElementById('username');
+const pwdInput = document.getElementById('pwd');
+const pwd2Input = document.getElementById('pwd2');
+const phoneInput = document.getElementById('phone');
+const verifyCodeInput = document.getElementById('verifyCode');
 const getCodeBtn = document.getElementById('getCodeBtn');
+const registerBtn = document.getElementById('registerBtn');
 
-getCodeBtn.addEventListener('click', function () {
-    const phoneVal = document.getElementById('phone').value.trim();
-    if (!PHONE_REGEX.test(phoneVal)) {
-        showToast('请输入正确的11位手机号', 'error');
-        return;
-    }
+// 密码小眼睛 + 发送验证码
+setupPasswordToggle(pwdInput);
+setupPasswordToggle(pwd2Input);
+bindVerifyCodeButton(getCodeBtn, () => phoneInput.value.trim());
 
-    apiPost('/api/sendCode', { phone: phoneVal })
-    .then(data => {
-        if (data.code === 200) {
-            showToast('验证码已发送！请到后端终端查看', 'success');
-            startCountdown(getCodeBtn);
-        } else {
-            showToast(data.msg, 'error');
-        }
-    })
-    .catch(() => showToast('网络错误，后端没启动', 'error'));
+// 回车提交表单
+document.getElementById('registerForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    registerBtn.click();
 });
 
-// ====== 表单校验 ======
 function checkForm() {
-    const username = document.getElementById('username').value.trim();
-    const pwd = document.getElementById('pwd').value.trim();
-    const pwd2 = document.getElementById('pwd2').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const verifyCode = document.getElementById('verifyCode').value.trim();
+    const username = usernameInput.value.trim();
+    const pwd = pwdInput.value.trim();
+    const pwd2 = pwd2Input.value.trim();
+    const phone = phoneInput.value.trim();
+    const verifyCode = verifyCodeInput.value.trim();
 
     if (username.length < 2 || username.length > 16) {
         showToast('用户名必须是2-16位字符', 'error'); return false;
@@ -46,8 +51,6 @@ function checkForm() {
     return true;
 }
 
-// ====== 注册提交 ======
-const registerBtn = document.getElementById('registerBtn');
 let isSubmitting = false;
 
 registerBtn.addEventListener('click', function (e) {
@@ -59,10 +62,10 @@ registerBtn.addEventListener('click', function (e) {
     setBtnLoading(registerBtn, '提交中...');
 
     apiPost('/api/register', {
-        username: document.getElementById('username').value.trim(),
-        password: document.getElementById('pwd').value.trim(),
-        phone: document.getElementById('phone').value.trim(),
-        verifyCode: document.getElementById('verifyCode').value.trim()
+        username: usernameInput.value.trim(),
+        password: pwdInput.value.trim(),
+        phone: phoneInput.value.trim(),
+        verifyCode: verifyCodeInput.value.trim()
     })
     .then(data => {
         if (data.code === 200) {

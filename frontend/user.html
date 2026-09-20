@@ -6,9 +6,9 @@
     <meta name="description" content="一起过新年 - 用户中心">
     <link rel="shortcut icon" href="img/favicon.ico">
     <title>用户中心 - 一起过新年</title>
-    <link rel="stylesheet" href="css/reset.css">
-    <link rel="stylesheet" href="css/common.css">
-    <link rel="stylesheet" href="css/user.css">
+    <link rel="stylesheet" href="css/reset.css?v=20260920b">
+    <link rel="stylesheet" href="css/common.css?v=20260920b">
+    <link rel="stylesheet" href="css/user.css?v=20260920g">
 </head>
 <body>
 
@@ -26,13 +26,13 @@
 
     <!-- 页面内容 -->
     <div class="page-content">
+     <div class="main-page wrapper">
 
         <!-- 导航栏（与首页一致的居中列表风格） -->
         <div class="page-header wrapper">
             <ul>
                 <li><a href="index.html">返回首页</a></li>
                 <li><a href="#" class="tab-link active" data-tab="profile">个人资料</a></li>
-                <li><a href="#" class="tab-link" data-tab="stats">我的数据</a></li>
                 <li><a href="#" class="tab-link" data-tab="settings">账号设置</a></li>
                 <li><a href="#" id="logoutLink">退出登录</a></li>
             </ul>
@@ -45,56 +45,27 @@
                 <!-- 用户头像 + 基本信息 -->
                 <div class="profile-card">
                     <div class="avatar-wrap">
-                        <div class="avatar" id="avatar">U</div>
-                        <div class="avatar-edit" data-toast="点击更换头像（演示）">
-                            <svg viewBox="0 0 24 24"><path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z"/></svg>
+                        <div class="avatar" id="avatar">
+                            <span id="avatarLetter">U</span>
+                            <img id="avatarImg" class="avatar__img" alt="用户头像" hidden>
                         </div>
+                        <button type="button" class="avatar-edit" id="avatarEditBtn" aria-label="更换头像" title="更换头像">
+                            <svg viewBox="0 0 24 24"><path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z"/></svg>
+                        </button>
                     </div>
                     <div class="profile-info">
-                        <h2 class="profile-name" id="username">加载中...</h2>
+                        <div class="profile-title-row">
+                            <h2 class="profile-name" id="username">加载中...</h2>
+                            <button type="button" class="edit-profile-btn" id="editProfileBtn">
+                                <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                                编辑资料
+                            </button>
+                        </div>
+                        <p class="profile-meta">账号：<span id="accountName">-</span></p>
                         <p class="profile-meta">手机号：<span id="phone">****</span></p>
+                        <p class="profile-meta">性别：<span id="gender">保密</span></p>
                         <p class="profile-meta">注册时间：<span id="createdAt">****</span></p>
-                        <p class="profile-desc">热爱新年文化，喜欢分享节日祝福和年俗故事。</p>
-                    </div>
-                </div>
-
-                <!-- 数据统计横排 -->
-                <div class="stats-row">
-                    <div class="stat-item">
-                        <span class="stat-num">0</span>
-                        <span class="stat-label">作品</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-num">0</span>
-                        <span class="stat-label">获赞</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-num">0</span>
-                        <span class="stat-label">收藏</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-num">0</span>
-                        <span class="stat-label">关注</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ====== 我的数据面板 ====== -->
-        <div class="tab-panel" id="panel-stats">
-            <div class="text-content wrapper">
-                <div class="text-content__container">
-                    <div class="text-content__left">
-                        <h2>我的作品</h2>
-                        <p>暂无发布内容，去首页分享你的新年故事吧</p>
-                        <h2>我的获赞</h2>
-                        <p>等待你的第一篇作品获得点赞</p>
-                    </div>
-                    <div class="text-content__right">
-                        <h2>我的收藏</h2>
-                        <p>收藏你喜欢的新年内容</p>
-                        <h2>我的关注</h2>
-                        <p>关注感兴趣的朋友</p>
+                        <p class="profile-desc" id="bio">热爱新年文化，喜欢分享节日祝福和年俗故事。</p>
                     </div>
                 </div>
             </div>
@@ -107,18 +78,15 @@
                     <div class="text-content__left">
                         <h2>修改密码</h2>
                         <p><a href="wangji.html" class="action-link">点击重置密码</a></p>
-                        <h2>隐私设置</h2>
-                        <p>管理谁可以看到你的主页和作品</p>
                     </div>
                     <div class="text-content__right">
-                        <h2>消息通知</h2>
-                        <p>管理你接收的通知类型</p>
                         <h2>帮助中心</h2>
-                        <p>遇到问题？查看常见问题或联系客服</p>
+                        <p><a href="help.html" class="action-link">常见问题与联系客服</a></p>
                     </div>
                 </div>
             </div>
         </div>
+     </div>
 
         <!-- 页脚 -->
         <div class="page-footer wrapper">
@@ -130,8 +98,81 @@
 
     </div>
 
-    <script src="js/utils.js"></script>
-    <script src="js/user.js"></script>
+    <!-- ====== 编辑资料弹窗 ====== -->
+    <div class="modal-mask" id="editModal" hidden>
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+            <div class="modal__header">
+                <h3 id="editModalTitle">编辑个人资料</h3>
+                <button type="button" class="modal__close" id="editCloseBtn" aria-label="关闭">&times;</button>
+            </div>
+            <div class="modal__body">
+
+                <!-- 头像上传：点击 / 拖拽均可 -->
+                <div class="avatar-uploader" id="avatarUploader">
+                    <div class="avatar avatar--lg" id="avatarPreview">
+                        <span id="previewLetter">U</span>
+                        <img id="previewImg" class="avatar__img" alt="头像预览" hidden>
+                        <div class="avatar-uploader__mask">
+                            <svg viewBox="0 0 24 24"><path d="M19 7v2.99s-1.99.01-2 0V7h-3s.01-1.99 0-2h3V2h2v3h3v2h-3zm-3 4V8h-3V5H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8h-3zM5 19l3-4 2 3 3-4 4 5H5z"/></svg>
+                            <span>更换头像</span>
+                        </div>
+                    </div>
+                    <p class="avatar-uploader__hint">点击或拖拽图片到此（JPG / PNG / WEBP，≤5MB，自动裁剪压缩）</p>
+                    <button type="button" class="avatar-uploader__remove" id="avatarRemoveBtn" hidden>移除头像</button>
+                    <input type="file" id="avatarInput" accept="image/png,image/jpeg,image/webp" hidden>
+                </div>
+
+                <div class="form-group">
+                    <label for="editNickname">昵称</label>
+                    <input type="text" id="editNickname" class="form-input" maxlength="16" placeholder="未设置时显示登录账号">
+                </div>
+
+                <div class="form-group">
+                    <label>性别</label>
+                    <div class="gender-group" id="genderGroup">
+                        <label class="gender-option">
+                            <input type="radio" name="gender" value="male">
+                            <span>男</span>
+                        </label>
+                        <label class="gender-option">
+                            <input type="radio" name="gender" value="female">
+                            <span>女</span>
+                        </label>
+                        <label class="gender-option">
+                            <input type="radio" name="gender" value="secret">
+                            <span>保密</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="editBio">个人简介</label>
+                    <textarea id="editBio" class="form-input form-textarea" maxlength="100" rows="3" placeholder="介绍一下自己吧～"></textarea>
+                    <div class="char-counter"><span id="bioCount">0</span>/100</div>
+                </div>
+            </div>
+            <div class="modal__footer">
+                <button type="button" class="btn btn--ghost" id="editCancelBtn">取消</button>
+                <button type="button" class="btn btn--primary" id="saveProfileBtn">保存修改</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== 通用确认弹窗 ====== -->
+    <div class="modal-mask" id="confirmModal" hidden>
+        <div class="modal modal--sm" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle">
+            <div class="modal__body">
+                <h3 id="confirmTitle">提示</h3>
+                <p class="confirm-msg" id="confirmMsg"></p>
+            </div>
+            <div class="modal__footer">
+                <button type="button" class="btn btn--ghost" id="confirmCancelBtn">取消</button>
+                <button type="button" class="btn btn--danger" id="confirmOkBtn">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/pages/user.js?v=20260920c"></script>
 
 </body>
 </html>

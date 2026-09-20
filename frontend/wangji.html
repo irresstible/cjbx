@@ -6,31 +6,33 @@
     <meta name="description" content="一起过新年 - 重置密码">
     <link rel="shortcut icon" href="img/favicon.ico">
     <title>忘记密码</title>
-    <link rel="stylesheet" href="css/forms.css">
-    <link rel="stylesheet" href="css/wangji.css">
+    <link rel="stylesheet" href="css/reset.css?v=20260920b">
+    <link rel="stylesheet" href="css/common.css?v=20260920b">
+    <link rel="stylesheet" href="css/forms.css?v=20260920b">
+    <link rel="stylesheet" href="css/wangji.css?v=20260920b">
 </head>
 <body>
     <div class="login-box">
         <h2>重置密码</h2>
         <form id="resetForm">
             <div class="user-box">
-                <input type="text" name="phone" id="phone" required="">
+                <input type="text" name="phone" id="phone" autocomplete="tel" inputmode="numeric" maxlength="11" required="">
                 <label>手机号</label>
             </div>
             <!-- 验证码行 -->
             <div class="user-box phone-box">
                 <div class="phone-input">
-                    <input type="text" name="verifyCode" id="verifyCode" required="">
+                    <input type="text" name="verifyCode" id="verifyCode" inputmode="numeric" maxlength="6" required="">
                     <label>验证码</label>
                 </div>
                 <span class="code-btn" id="getCodeBtn">获取验证码</span>
             </div>
             <div class="user-box">
-                <input type="password" name="newPwd" id="newPwd" required="">
+                <input type="password" name="newPwd" id="newPwd" autocomplete="new-password" required="">
                 <label>新密码</label>
             </div>
             <div class="user-box">
-                <input type="password" name="newPwd2" id="newPwd2" required="">
+                <input type="password" name="newPwd2" id="newPwd2" autocomplete="new-password" required="">
                 <label>确认新密码</label>
             </div>
             <div class="register-btn-wrap">
@@ -40,7 +42,6 @@
         </form>
     </div>
 
-    <script src="js/utils.js"></script>
-    <script src="js/wangji.js"></script>
+    <script type="module" src="js/pages/reset.js?v=20260920c"></script>
 </body>
 </html>

@@ -66,15 +66,28 @@ html, body {
 }
 
 /* ========== 页面内容叠加层 ========== */
+/* 仅实际内容区域接收事件，空白区域透传给下层翻转背景（点击暂停） */
 .page-content {
     position: relative;
     z-index: 10;
     width: 100%;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     pointer-events: none;
 }
 
-.page-content > * {
+/* 中间内容区弹性占满剩余高度，把页脚顶到页面底部（与首页一致） */
+.main-page {
+    flex: 1;
+    pointer-events: none;
+}
+
+/* 只有实际可见的内容块接收事件；通栏 wrapper 的空白区域透传给翻转背景 */
+.page-header ul,
+.profile-card,
+.text-content__container,
+.page-footer__box {
     pointer-events: auto;
 }
 
@@ -88,34 +101,37 @@ html, body {
 
 .page-header ul {
     display: flex;
-    gap: 50px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto;
 }
 
 .page-header ul li a {
-    font-size: 18px;
-    color: white;
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 16px;
+    color: #fff;
     transition: color 0.25s;
-    position: relative;
 }
 
 .page-header ul li a:hover {
-    color: #c45620;
+    color: var(--brand-2);
 }
 
-/* 导航 active 状态（当前标签页） */
+/* 导航 active 状态（当前标签页）：小巧的渐变胶囊 */
 .page-header ul li a.active {
-    color: #c45620;
+    color: #fff;
+    background: var(--brand-gradient);
+    border-radius: 999px;
+    box-shadow: var(--shadow-brand);
 }
 
-.page-header ul li a.active::after {
-    content: '';
-    position: absolute;
-    bottom: -6px;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: #c45620;
-    border-radius: 1px;
+.page-header ul li a.active:hover {
+    color: #fff;
 }
 
 /* ========== 标签面板切换 ========== */
@@ -141,7 +157,7 @@ html, body {
 
 /* ========== 个人资料区域 ========== */
 .profile-section {
-    padding: 20px 0 40px;
+    padding: 20px 0;
 }
 
 .profile-card {
@@ -153,7 +169,6 @@ html, body {
     backdrop-filter: blur(12px);
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 24px;
 }
 
 /* ===== 头像 ===== */
@@ -175,10 +190,31 @@ html, body {
     color: #fff;
     border: 3px solid rgba(255, 255, 255, 0.25);
     transition: transform 0.3s;
+    overflow: hidden;
 }
 
 .avatar:hover {
     transform: scale(1.05);
+}
+
+.avatar__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* 弹窗内大头像 */
+.avatar--lg {
+    width: 108px;
+    height: 108px;
+    font-size: 42px;
+    cursor: pointer;
+    position: relative;
+}
+
+.avatar--lg:hover {
+    transform: scale(1.02);
 }
 
 .avatar-edit {
@@ -187,6 +223,7 @@ html, body {
     right: 0;
     width: 28px;
     height: 28px;
+    padding: 0;
     background: rgba(196, 86, 32, 0.9);
     border-radius: 50%;
     display: flex;
@@ -194,11 +231,12 @@ html, body {
     justify-content: center;
     cursor: pointer;
     border: 2px solid rgba(0, 0, 0, 0.4);
-    transition: background 0.3s;
+    transition: background 0.3s, transform 0.3s;
 }
 
 .avatar-edit:hover {
     background: #c45620;
+    transform: scale(1.1);
 }
 
 .avatar-edit svg {
@@ -219,6 +257,45 @@ html, body {
     margin-bottom: 10px;
 }
 
+/* 标题行：昵称 + 编辑按钮 */
+.profile-title-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.profile-title-row .profile-name {
+    margin-bottom: 0;
+}
+
+.edit-profile-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 14px;
+    font-size: 13px;
+    color: #f3b389;
+    background: rgba(196, 86, 32, 0.14);
+    border: 1px solid rgba(196, 86, 32, 0.55);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.25s;
+}
+
+.edit-profile-btn svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+}
+
+.edit-profile-btn:hover {
+    color: #fff;
+    background: #c45620;
+    border-color: #c45620;
+    transform: translateY(-1px);
+}
+
 .profile-meta {
     font-size: 14px;
     color: rgba(255, 255, 255, 0.6);
@@ -236,42 +313,6 @@ html, body {
     line-height: 1.6;
 }
 
-/* ========== 数据统计横排 ========== */
-.stats-row {
-    display: flex;
-    gap: 16px;
-}
-
-.stat-item {
-    flex: 1;
-    text-align: center;
-    padding: 20px 16px;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(8px);
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: all 0.3s;
-    cursor: default;
-}
-
-.stat-item:hover {
-    border-color: rgba(196, 86, 32, 0.5);
-    transform: translateY(-2px);
-}
-
-.stat-num {
-    display: block;
-    font-size: 30px;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 4px;
-}
-
-.stat-label {
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.5);
-}
-
 /* ========== 文字内容区（与首页一致） ========== */
 .text-content {
     width: 100%;
@@ -286,6 +327,12 @@ html, body {
     gap: 60px;
     text-align: center;
     color: #fff;
+    padding: 36px 32px;
+    background: rgba(0, 0, 0, 0.28);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
 }
 
 .text-content__left h2,
@@ -317,29 +364,326 @@ html, body {
 .page-footer__box {
     text-align: center;
     color: #fff;
-    padding: 20px;
-    position: absolute;
-    bottom: 20px;
-    left: 0;
-    width: 100%;
+    padding: 24px 20px 28px;
 }
 
 .page-footer__box p {
-    font-size: 14px;
+    font-size: 13px;
     line-height: 2;
     margin: 0;
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--text-2);
+}
+
+/* ========== 现代化弹窗 ========== */
+.modal-mask {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    box-sizing: border-box;
+}
+
+/* hidden 属性优先：避免 display:flex 覆盖浏览器默认的 [hidden]{display:none} */
+.modal-mask[hidden] {
+    display: none;
+}
+
+.modal-mask.show {
+    opacity: 1;
+}
+
+.modal {
+    width: 460px;
+    max-width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: rgba(28, 22, 20, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+    transform: translateY(24px) scale(0.96);
+    opacity: 0;
+    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s;
+}
+
+.modal-mask.show .modal {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+.modal--sm {
+    width: 360px;
+}
+
+.modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 0;
+}
+
+.modal__header h3 {
+    margin: 0;
+    font-size: 19px;
+    color: #fff;
+}
+
+.modal__close {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.modal__close:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.modal__body {
+    padding: 20px 24px;
+}
+
+.modal__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 0 24px 22px;
+}
+
+/* ========== 弹窗内表单 ========== */
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group > label {
+    display: block;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 8px;
+}
+
+.form-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px 14px;
+    font-size: 14px;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.form-input::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.form-input:focus {
+    border-color: #c45620;
+    background: rgba(255, 255, 255, 0.09);
+    box-shadow: 0 0 0 3px rgba(196, 86, 32, 0.18);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 76px;
+    line-height: 1.6;
+    font-family: inherit;
+}
+
+.char-counter {
+    margin-top: 6px;
+    text-align: right;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* 性别分段选择 */
+.gender-group {
+    display: flex;
+    gap: 10px;
+}
+
+.gender-option {
+    flex: 1;
+    cursor: pointer;
+}
+
+.gender-option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.gender-option span {
+    display: block;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.75);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 10px;
+    transition: all 0.2s;
+}
+
+.gender-option:hover span {
+    border-color: rgba(196, 86, 32, 0.6);
+}
+
+.gender-option input:checked + span {
+    color: #fff;
+    background: linear-gradient(135deg, #c45620, #e8834a);
+    border-color: transparent;
+    box-shadow: 0 6px 16px rgba(196, 86, 32, 0.35);
+}
+
+/* ========== 头像上传区 ========== */
+.avatar-uploader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.avatar-uploader__mask {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    color: #fff;
+    font-size: 12px;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.25s;
+}
+
+.avatar-uploader__mask svg {
+    width: 24px;
+    height: 24px;
+    fill: #fff;
+}
+
+.avatar-uploader:hover .avatar-uploader__mask,
+.avatar-uploader.is-dragover .avatar-uploader__mask {
+    opacity: 1;
+}
+
+.avatar-uploader.is-dragover .avatar--lg {
+    border-color: #03e9f4;
+    box-shadow: 0 0 0 4px rgba(3, 233, 244, 0.25);
+}
+
+.avatar-uploader__hint {
+    margin: 12px 0 4px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.45);
+    text-align: center;
+}
+
+.avatar-uploader__remove {
+    margin-top: 4px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    font-size: 12px;
+    color: #e57373;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.avatar-uploader__remove:hover {
+    color: #ef5350;
+    text-decoration: underline;
+}
+
+/* ========== 按钮 ========== */
+.btn {
+    padding: 10px 22px;
+    font-size: 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.25s;
+}
+
+.btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.btn--primary {
+    color: #fff;
+    background: linear-gradient(135deg, #c45620, #e8834a);
+    box-shadow: 0 6px 18px rgba(196, 86, 32, 0.35);
+}
+
+.btn--primary:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba(196, 86, 32, 0.45);
+}
+
+.btn--ghost {
+    color: rgba(255, 255, 255, 0.8);
+    background: transparent;
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+.btn--ghost:hover:not(:disabled) {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.55);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.btn--danger {
+    color: #fff;
+    background: linear-gradient(135deg, #c0392b, #e74c3c);
+    box-shadow: 0 6px 18px rgba(231, 76, 60, 0.3);
+}
+
+.btn--danger:hover:not(:disabled) {
+    transform: translateY(-1px);
+}
+
+/* 确认弹窗文字 */
+.confirm-msg {
+    margin: 12px 0 0;
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.75);
 }
 
 /* ========== 响应式 ========== */
 @media (max-width: 768px) {
     .page-header ul {
-        gap: 20px;
+        gap: 8px;
         flex-wrap: wrap;
         justify-content: center;
     }
     .page-header ul li a {
         font-size: 15px;
+        padding: 6px 10px;
     }
     .profile-card {
         flex-direction: column;
@@ -347,15 +691,22 @@ html, body {
         padding: 28px 20px;
         gap: 20px;
     }
-    .stats-row {
-        flex-wrap: wrap;
-    }
-    .stat-item {
-        flex: 1 1 45%;
-    }
     .text-content__container {
         flex-direction: column;
         gap: 0;
-        padding: 0 16px;
+        padding: 24px 20px;
+    }
+    .modal {
+        width: 100%;
+    }
+    .modal__body {
+        padding: 18px 18px;
+    }
+    .modal__footer {
+        padding: 0 18px 18px;
+    }
+    .btn {
+        flex: 1;
+        padding: 11px 12px;
     }
 }

@@ -1,0 +1,143 @@
+/* ========== 帮助中心页 ========== */
+/* 页面整体继承 index.css 的点击穿透，仅帮助卡片与导航接收事件 */
+.help-section {
+    width: 100%;
+    padding: 20px 0 40px;
+    pointer-events: auto;
+}
+
+.help-card {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px 36px;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.28);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+}
+
+.help-title {
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 8px;
+    background: var(--brand-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.help-subtitle {
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-2);
+    margin-bottom: 28px;
+}
+
+/* ========== FAQ 折叠列表 ========== */
+.faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.faq-item {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: border-color 0.25s, background 0.25s;
+}
+
+.faq-item[open] {
+    border-color: rgba(232, 131, 74, 0.5);
+    background: rgba(232, 131, 74, 0.08);
+}
+
+.faq-item summary {
+    position: relative;
+    padding: 16px 44px 16px 18px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    transition: color 0.25s;
+}
+
+.faq-item summary::-webkit-details-marker {
+    display: none;
+}
+
+.faq-item summary::after {
+    content: '+';
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--brand-2);
+    transition: transform 0.25s;
+}
+
+.faq-item[open] summary::after {
+    transform: translateY(-50%) rotate(45deg);
+}
+
+.faq-item summary:hover {
+    color: var(--brand-2);
+}
+
+.faq-answer {
+    padding: 0 18px 18px;
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text-2);
+}
+
+/* ========== 联系我们 ========== */
+.help-contact {
+    margin-top: 32px;
+    padding: 24px;
+    text-align: center;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px dashed rgba(255, 255, 255, 0.18);
+}
+
+.help-contact h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.help-contact p {
+    font-size: 14px;
+    color: var(--text-2);
+    line-height: 1.8;
+}
+
+.help-contact__mail {
+    color: var(--brand-2);
+    font-weight: 500;
+}
+
+/* ========== 移动端 ========== */
+@media (max-width: 600px) {
+    .help-card {
+        padding: 28px 18px;
+    }
+
+    .help-title {
+        font-size: 24px;
+    }
+
+    .faq-item summary {
+        font-size: 15px;
+        padding: 14px 40px 14px 16px;
+    }
+}

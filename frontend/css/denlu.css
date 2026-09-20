@@ -3,50 +3,40 @@ body {
     background-image: url(../img/login.jpg);
 }
 
-/* 显示/隐藏密码按钮 */
-.toggle-pwd {
-    position: absolute;
-    right: 0;
-    bottom: 10px;
-    cursor: pointer;
-    color: #888;
-    transition: color 0.3s;
-}
-
-.toggle-pwd:hover {
-    color: #03e9f4;
-}
-
 /* 登录选项：记住密码 + 忘记密码 */
 .login-options {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: 26px;
 }
 
 .remember-label {
-    color: #ccc;
+    color: var(--text-2);
     font-size: 14px;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 6px;
+    user-select: none;
 }
 
 .remember-label input[type="checkbox"] {
     width: 16px;
     height: 16px;
-    accent-color: #03e9f4;
+    accent-color: var(--brand-1);
     cursor: pointer;
 }
 
 .forget-link {
-    color: #03e9f4;
+    color: var(--brand-soft);
     font-size: 14px;
     text-decoration: none;
+    transition: color 0.25s;
 }
 
 .forget-link:hover {
-    text-shadow: 0 0 8px #03e9f4;
+    color: var(--brand-2);
+    text-decoration: underline;
+    text-underline-offset: 3px;
 }

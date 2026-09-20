@@ -1,16 +1,25 @@
+/**
+ * 登录页入口
+ */
+import { apiPost } from '../api.js';
+import {
+    setToken, setUsername,
+    getSavedUsername, setSavedUsername, removeSavedUsername
+} from '../storage.js';
+import { showToast } from '../ui/toast.js';
+import { setBtnLoading, resetBtnState } from '../ui/button.js';
+
 const loginBtn = document.getElementById('loginBtn');
 const usernameInput = document.getElementById('username');
 const pwdInput = document.getElementById('pwd');
 const rememberMe = document.getElementById('rememberMe');
 
-// 页面加载时读取记住的用户名
-window.onload = function () {
-    const savedUsername = localStorage.getItem('savedUsername');
-    if (savedUsername) {
-        usernameInput.value = savedUsername;
-        rememberMe.checked = true;
-    }
-};
+// 回填记住的用户名
+const savedUsername = getSavedUsername();
+if (savedUsername) {
+    usernameInput.value = savedUsername;
+    rememberMe.checked = true;
+}
 
 function checkLoginForm() {
     if (!usernameInput.value.trim()) { showToast('用户名不能为空', 'error'); return false; }
@@ -20,6 +29,12 @@ function checkLoginForm() {
 }
 
 let isLoginSubmitting = false;
+
+// 回车提交表单（避免触发浏览器默认刷新）
+document.getElementById('loginForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    loginBtn.click();
+});
 
 loginBtn.addEventListener('click', function (e) {
     e.preventDefault();
@@ -35,12 +50,12 @@ loginBtn.addEventListener('click', function (e) {
     })
     .then(data => {
         if (data.code === 200) {
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('username', data.username);
+            setToken(data.token);
+            setUsername(data.username);
             if (rememberMe.checked) {
-                localStorage.setItem('savedUsername', usernameInput.value.trim());
+                setSavedUsername(usernameInput.value.trim());
             } else {
-                localStorage.removeItem('savedUsername');
+                removeSavedUsername();
             }
             showToast('登录成功！', 'success');
             setTimeout(() => { location.href = 'user.html'; }, 800);
@@ -57,7 +72,7 @@ loginBtn.addEventListener('click', function (e) {
     });
 });
 
-// ====== 显示/隐藏密码 ======
+// ====== 显示 / 隐藏密码 ======
 const togglePwd = document.getElementById('togglePwd');
 const eyeOpen = document.getElementById('eyeOpen');
 const eyeClose = document.getElementById('eyeClose');

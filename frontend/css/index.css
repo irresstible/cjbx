@@ -71,38 +71,59 @@ body {
         transform: rotateY(360deg);
     }
 }
-/* 用户信息链接 */
-.user-info {
+/* 用户信息链接（选择器需与 .page-header ul li a 同优先级以上，flex 才会生效） */
+.page-header ul li a.user-info {
     display: flex;
     align-items: center;
     gap: 8px;
     text-decoration: none;
 }
 .user-avatar {
-    width: 24px;
-    height: 24px;
+    display: block;
+    flex: none;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     object-fit: cover;
-    border: 1px solid #03e9f4;
+    border: 1.5px solid rgba(255, 255, 255, 0.55);
+    transition: border-color 0.25s, transform 0.25s;
+}
+.user-info:hover .user-avatar {
+    border-color: var(--brand-2);
+    transform: scale(1.08);
 }
 .user-name {
     color: #fff;
-    font-size: 14px;
+    font-size: inherit;
+    font-family: inherit;
+    line-height: 1;
+    white-space: nowrap;
 }
 .user-info:hover .user-name {
-    color: #03e9f4;
+    color: var(--brand-2);
 }
 
 /* ========== 页面内容覆盖在翻转图上方 ========== */
+/* 仅实际内容区域接收鼠标事件，大片空白区域透传给下层翻转背景（点击暂停） */
 .page-content {
     position: relative;
     z-index: 10;
     width: 100%;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     pointer-events: none;
 }
 
-.page-content > * {
+.main-page {
+    flex: 1;
+    pointer-events: none;
+}
+
+/* 只有实际可见的内容块接收事件；通栏 wrapper 两侧的空白透传给翻转背景 */
+.page-header ul,
+.text-content__container,
+.page-footer__box {
     pointer-events: auto;
 }
 
@@ -116,17 +137,25 @@ body {
 
 .page-header ul {
     display: flex;
-    gap: 50px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto;
 }
 
 .page-header ul li a {
-    font-size: 18px;
-    color: white;
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 16px;
+    color: #fff;
     transition: color 0.25s;
 }
 
 .page-header ul li a:hover {
-    color: #c45620;
+    color: var(--brand-2);
 }
 
 /* ========== 中间文字内容 ========== */
@@ -143,45 +172,105 @@ body {
     gap: 60px;
     text-align: center;
     color: #fff;
+    padding: 36px 32px;
+    background: rgba(0, 0, 0, 0.28);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
 }
 
-/* ========== 图片弹窗 ========== */
+.text-content__left h2,
+.text-content__right h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.text-content__left p,
+.text-content__right p {
+    font-size: 14px;
+    color: var(--text-2);
+    margin-bottom: 24px;
+}
+
+/* ========== 图片灯箱 ========== */
 #img-modal {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    display: none;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s var(--ease);
     z-index: 100;
+}
+
+#img-modal.show {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .img-modal__close {
     position: absolute;
-    top: 30px;
-    right: 50px;
+    top: 28px;
+    right: 32px;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: #fff;
-    font-size: 40px;
+    font-size: 26px;
+    line-height: 1;
     cursor: pointer;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: background 0.25s, transform 0.25s;
+}
+
+.img-modal__close:hover {
+    background: var(--brand-1);
+    transform: rotate(90deg);
 }
 
 #img-modal__pic {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     max-width: 90%;
-    max-height: 90%;
+    max-height: 86%;
+    border-radius: var(--radius);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+    transform: scale(0.92);
+    transition: transform 0.35s var(--ease);
+}
+
+#img-modal.show #img-modal__pic {
+    transform: scale(1);
 }
 
 /* ========== 页脚 ========== */
 .page-footer__box {
     text-align: center;
     color: #fff;
-    padding: 20px;
-    position: absolute;
-    bottom: 20px;
-    left: 0;
-    width: 100%;
+    padding: 24px 20px 28px;
+}
+
+.page-footer__box p {
+    font-size: 13px;
+    line-height: 2;
+    margin: 0;
+    color: var(--text-2);
+}
+
+@media (max-width: 600px) {
+    .text-content__container {
+        flex-direction: column;
+        gap: 0;
+        margin: 0 16px;
+        padding: 24px 20px;
+    }
 }

@@ -4,6 +4,7 @@
 body {
     min-height: 100vh;
     margin: 0;
+    padding: 24px;
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
@@ -14,19 +15,36 @@ body {
 }
 
 .login-box {
-    width: 420px;
+    width: min(420px, 100%);
     padding: 40px;
-    background: rgba(0, 0, 0, .5);
+    background: var(--panel-strong);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
     box-sizing: border-box;
-    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
-    border-radius: 10px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    animation: cardIn 0.5s var(--ease);
+}
+
+@keyframes cardIn {
+    from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .login-box h2 {
     margin: 0 0 30px;
     color: #fff;
     text-align: center;
-    font-size: 32px;
+    font-size: 30px;
+    letter-spacing: 2px;
+    font-weight: 700;
 }
 
 /* ====== 输入框 ====== */
@@ -41,14 +59,14 @@ body {
     font-size: 16px;
     color: #fff;
     border: none;
-    border-bottom: 1px solid #fff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.35);
     outline: none;
     background: transparent;
-    transition: border-color 0.4s;
+    transition: border-color 0.3s;
 }
 
 .user-box input:focus {
-    border-bottom: 1px solid #03e9f4;
+    border-bottom: 1px solid var(--brand-2);
 }
 
 .user-box label {
@@ -56,17 +74,36 @@ body {
     top: 10px;
     left: 0;
     font-size: 16px;
-    color: #ffffff;
+    color: rgba(255, 255, 255, 0.75);
     pointer-events: none;
-    transition: all 0.4s ease-in-out;
+    transition: all 0.3s var(--ease);
 }
 
 .user-box input:focus ~ label,
 .user-box input:valid ~ label {
     top: -18px;
     left: 0;
-    color: #03e9f4;
+    color: var(--brand-2);
     font-size: 13px;
+}
+
+/* ====== 显示/隐藏密码按钮（三个表单页共用） ====== */
+.toggle-pwd {
+    position: absolute;
+    right: 0;
+    bottom: 10px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.45);
+    transition: color 0.25s;
+    display: flex;
+    align-items: center;
+}
+
+.toggle-pwd:hover {
+    color: var(--brand-2);
 }
 
 /* ====== 手机号 + 验证码行 ====== */
@@ -83,57 +120,91 @@ body {
 }
 
 .code-btn {
-    color: #b0b0b0;
+    color: var(--brand-soft);
     font-size: 14px;
     white-space: nowrap;
-    padding-bottom: 8px;
+    padding: 8px 14px;
+    margin-bottom: 2px;
     cursor: pointer;
+    border: 1px solid rgba(196, 86, 32, 0.55);
+    border-radius: 999px;
+    background: rgba(196, 86, 32, 0.12);
+    user-select: none;
+    transition: all 0.25s;
 }
 
-/* ====== 提交按钮 ====== */
+.code-btn:hover {
+    color: #fff;
+    background: var(--brand-1);
+    border-color: var(--brand-1);
+}
+
+/* ====== 主行动按钮（登录 / 注册 / 重置） ====== */
 .register-btn-wrap,
 .login-btn-wrap {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 24px;
 }
 
 .register-btn,
 .login-btn {
-    display: inline-block;
-    padding: 10px 20px;
-    color: #03e9f4;
-    font-size: 22px;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 20px;
+    color: #fff;
+    font-size: 16px;
+    letter-spacing: 3px;
     text-decoration: none;
-    text-transform: uppercase;
-    letter-spacing: 4px;
-    transition: 0.5s;
+    border-radius: var(--radius-sm);
+    background: var(--brand-gradient);
+    box-shadow: var(--shadow-brand);
+    transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), opacity 0.25s;
 }
 
 .register-btn:hover,
 .login-btn:hover {
-    background: #03e9f4;
-    color: #fff;
-    border-radius: 5px;
-    box-shadow: 0 0 5px #03e9f4,
-                0 0 25px #03e9f4,
-                0 0 50px #03e9f4;
+    transform: translateY(-1px);
+    box-shadow: 0 12px 28px rgba(196, 86, 32, 0.45);
+}
+
+.register-btn:active,
+.login-btn:active {
+    transform: translateY(0);
 }
 
 /* ====== 底部链接 ====== */
 .back-login,
 .back-register {
-    margin-top: 25px;
+    margin-top: 24px;
     text-align: center;
-    font-size: 18px;
+    font-size: 14px;
+    color: var(--text-2);
 }
 
 .back-login a,
 .back-register a {
-    color: #03e9f4;
+    color: var(--brand-soft);
     text-decoration: none;
+    transition: color 0.25s;
 }
 
 .back-login a:hover,
 .back-register a:hover {
-    text-shadow: 0 0 8px #03e9f4;
+    color: var(--brand-2);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* ====== 移动端 ====== */
+@media (max-width: 480px) {
+    body {
+        padding: 16px;
+    }
+    .login-box {
+        padding: 32px 24px;
+    }
+    .login-box h2 {
+        font-size: 26px;
+    }
 }

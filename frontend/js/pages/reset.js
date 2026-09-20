@@ -1,31 +1,35 @@
-// ====== 验证码 ======
+/**
+ * 忘记密码 / 重置密码页入口
+ */
+import { apiPost } from '../api.js';
+import { PHONE_REGEX } from '../config.js';
+import { showToast } from '../ui/toast.js';
+import { setBtnLoading, resetBtnState } from '../ui/button.js';
+import { setupPasswordToggle, bindVerifyCodeButton } from '../ui/form.js';
+
+const phoneInput = document.getElementById('phone');
+const verifyCodeInput = document.getElementById('verifyCode');
+const newPwdInput = document.getElementById('newPwd');
+const newPwd2Input = document.getElementById('newPwd2');
 const getCodeBtn = document.getElementById('getCodeBtn');
+const resetBtn = document.getElementById('resetBtn');
 
-getCodeBtn.addEventListener('click', function () {
-    const phoneVal = document.getElementById('phone').value.trim();
-    if (!PHONE_REGEX.test(phoneVal)) {
-        showToast('请输入正确的11位手机号', 'error');
-        return;
-    }
+// 密码小眼睛 + 发送验证码
+setupPasswordToggle(newPwdInput);
+setupPasswordToggle(newPwd2Input);
+bindVerifyCodeButton(getCodeBtn, () => phoneInput.value.trim());
 
-    apiPost('/api/sendCode', { phone: phoneVal })
-    .then(data => {
-        if (data.code === 200) {
-            showToast('验证码已发送！请到后端终端查看', 'success');
-            startCountdown(getCodeBtn);
-        } else {
-            showToast(data.msg, 'error');
-        }
-    })
-    .catch(() => showToast('网络错误，后端没启动', 'error'));
+// 回车提交表单
+document.getElementById('resetForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    resetBtn.click();
 });
 
-// ====== 表单校验 ======
 function checkResetForm() {
-    const phone = document.getElementById('phone').value.trim();
-    const verifyCode = document.getElementById('verifyCode').value.trim();
-    const newPwd = document.getElementById('newPwd').value.trim();
-    const newPwd2 = document.getElementById('newPwd2').value.trim();
+    const phone = phoneInput.value.trim();
+    const verifyCode = verifyCodeInput.value.trim();
+    const newPwd = newPwdInput.value.trim();
+    const newPwd2 = newPwd2Input.value.trim();
 
     if (!PHONE_REGEX.test(phone)) {
         showToast('手机号格式不正确', 'error'); return false;
@@ -42,8 +46,6 @@ function checkResetForm() {
     return true;
 }
 
-// ====== 重置密码提交 ======
-const resetBtn = document.getElementById('resetBtn');
 let isResetSubmitting = false;
 
 resetBtn.addEventListener('click', function (e) {
@@ -55,9 +57,9 @@ resetBtn.addEventListener('click', function (e) {
     setBtnLoading(resetBtn, '提交中...');
 
     apiPost('/api/resetPassword', {
-        phone: document.getElementById('phone').value.trim(),
-        verifyCode: document.getElementById('verifyCode').value.trim(),
-        newPassword: document.getElementById('newPwd').value.trim()
+        phone: phoneInput.value.trim(),
+        verifyCode: verifyCodeInput.value.trim(),
+        newPassword: newPwdInput.value.trim()
     })
     .then(data => {
         if (data.code === 200) {
