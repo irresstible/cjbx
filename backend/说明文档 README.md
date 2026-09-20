@@ -1,48 +1,17 @@
-# 一起过新年 - 后端服务
+# 后端服务说明
 
-## 技术栈
-Node.js + Express + SQLite + JWT + bcrypt
+完整的项目介绍、安装步骤、接口文档与部署指南，请查看项目根目录的 **[README.md](../../README.md)**。
 
-## 快速启动
+## 速查
 
-### 1. 安装依赖
 ```bash
-cd backend
-npm install
+# 在 backend 目录下
+npm install      # 安装依赖
+npm start        # 启动（http://localhost:3000）
+npm run dev      # 开发模式（文件改动自动重启）
 ```
 
-### 2. 启动服务
-```bash
-# 普通启动
-npm start
-
-# 开发模式（自动重启）
-npm run dev
-```
-
-### 3. 访问
-服务运行在 http://localhost:3000
-
-## 接口列表
-
-| 接口 | 方法 | 请求参数 | 说明 |
-|------|------|---------|------|
-| /api/sendCode | POST | `{ phone }` | 发送验证码（控制台打印） |
-| /api/register | POST | `{ username, password, phone, verifyCode }` | 注册 |
-| /api/login | POST | `{ username, password }` | 登录，返回 token |
-| /api/resetPassword | POST | `{ phone, verifyCode, newPassword }` | 重置密码 |
-| /api/profile | GET | Header: `Authorization: Bearer <token>` | 获取用户信息 |
-
-## 返回格式
-```json
-{ "code": 200, "msg": "成功", "data": {} }
-```
-- code: 200 成功，400 失败，401 未登录
-
-## 前端对接
-把前端 JS 里的 `http://localhost:3000` 改成你的后端地址即可。
-
-## 注意事项
-- 验证码存在内存里，重启服务后失效（演示用）
-- 生产环境请用 Redis 存储验证码，接入真实短信服务商
-- JWT_SECRET 请改成随机字符串，放环境变量
+- 配置：复制/编辑本目录下的 `.env`（`PORT`、`JWT_SECRET`、`FRONTEND_URL`）
+- 数据：`data.json`（自动备份为 `data.json.bak`），均不提交 git
+- 注册验证码：打印在运行服务的终端窗口（模拟短信，不真正发送）
+- 技术栈：Node.js + Express + JWT + bcryptjs，数据存储为本地 JSON 文件（非 SQLite）

@@ -7,8 +7,24 @@ const authRouter = require('./routes/auth');
 const app = express();
 
 // ====== 中间件 ======
-app.use(cors({ origin: config.frontendUrl }));
-app.use(express.json({ limit: '1mb' }));
+// CORS：FRONTEND_URL 支持 '*' 或逗号分隔的白名单（如 .env 注释所述）
+const corsOrigins = config.frontendUrl
+    .split(',')
+    .map((o) => o.trim())
+    .filter(Boolean);
+app.use(
+    cors({
+        origin(origin, callback) {
+            // 无 Origin（同源请求、curl、服务器内部）或白名单含 '*' 一律放行
+            if (!origin || corsOrigins.includes('*') || corsOrigins.includes(origin)) {
+                return callback(null, true);
+            }
+            // 非白名单来源：不下发 CORS 头，浏览器会自动拦截跨域响应
+            return callback(null, false);
+        },
+    })
+);
+app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // 托管前端静态文件（生产部署时，将 frontend 目录放到后端同级或直接合并）
@@ -44,5 +60,6 @@ app.listen(config.port, () => {
   console.log('    POST /api/login        登录');
   console.log('    POST /api/resetPassword 重置密码');
   console.log('    GET  /api/profile      获取用户信息（需登录）');
+  console.log('    PUT  /api/profile      修改昵称/性别/简介/头像（需登录）');
   console.log('=================================');
 });

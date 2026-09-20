@@ -2,6 +2,10 @@ name = "wdbx-cjbx"
 main = "worker/index.js"
 compatibility_date = "2025-01-01"
 
+# JWT_SECRET 属于敏感信息，不要写在本文件中。
+# 线上设置：npx wrangler secret put JWT_SECRET
+# 本地调试：在项目根目录创建 .dev.vars，写入 JWT_SECRET=xxx
+
 assets = { directory = "./frontend", binding = "ASSETS" }
 
 [[kv_namespaces]]

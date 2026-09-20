@@ -7,7 +7,17 @@
 import bcrypt from 'bcryptjs';
 
 // ====== 配置 ======
-const JWT_SECRET = 'cjbx-secret-key-2025';
+// JWT 密钥必须通过环境变量注入（Pages 项目后台 → Settings → Environment variables，或本地 .dev.vars）
+function getJwtSecret(env) {
+  const secret = env && env.JWT_SECRET ? String(env.JWT_SECRET).trim() : '';
+  return secret || null;
+}
+
+// 密钥未配置时的统一错误返回（本文件处理器返回 {status, body} 形态）
+function secretMissingResult() {
+  console.error('[config] 缺少 JWT_SECRET 环境变量，鉴权接口不可用');
+  return { status: 500, body: { code: 500, msg: '服务器配置错误，请联系管理员' } };
+}
 
 // ====== 校验工具 ======
 const PHONE_REGEX = /^1[3-9]\d{9}$/;
@@ -15,14 +25,33 @@ const isValidPhone = (p) => PHONE_REGEX.test(p);
 const isValidUsername = (u) => u && u.length >= 2 && u.length <= 16;
 const isValidPassword = (p) => p && p.length >= 6;
 
+// ====== 个人资料字段校验 ======
+const ALLOWED_GENDERS = ['male', 'female', 'secret'];
+const isOptionalText = (v, max) => typeof v === 'string' && v.trim().length <= max;
+const AVATAR_DATA_URL_REGEX = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=\r\n]+$/;
+const MAX_AVATAR_LENGTH = 2 * 1024 * 1024;
+const isValidAvatar = (v) => AVATAR_DATA_URL_REGEX.test(v) && v.length <= MAX_AVATAR_LENGTH;
+
+// ====== Base64 UTF-8 安全编解码（中文用户名不会抛错） ======
+function b64encode(str) {
+  const bytes = new TextEncoder().encode(str);
+  return btoa(String.fromCharCode(...bytes));
+}
+
+function b64decode(b64) {
+  const bin = atob(b64);
+  const bytes = Uint8Array.from([...bin].map(c => c.charCodeAt(0)));
+  return new TextDecoder().decode(bytes);
+}
+
 // ====== JWT 工具 (HS256, 使用 Web Crypto API) ======
 async function jwtSign(payload, secret, expiresInSec = 7 * 86400) {
   const header = { alg: 'HS256', typ: 'JWT' };
   const now = Math.floor(Date.now() / 1000);
   const body = { ...payload, iat: now, exp: now + expiresInSec };
 
-  const b64 = (obj) => btoa(JSON.stringify(obj)).replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_');
-  const signingInput = `${b64(header)}.${b64(body)}`;
+  const b64url = (obj) => b64encode(JSON.stringify(obj)).replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_');
+  const signingInput = `${b64url(header)}.${b64url(body)}`;
 
   const key = await crypto.subtle.importKey(
     'raw',
@@ -59,7 +88,7 @@ async function jwtVerify(token, secret) {
   const valid = await crypto.subtle.verify('HMAC', key, sigBuf, new TextEncoder().encode(signingInput));
   if (!valid) throw new Error('invalid signature');
 
-  const payload = JSON.parse(atob(p.replace(/-/g, '+').replace(/_/g, '/')));
+  const payload = JSON.parse(b64decode(p.replace(/-/g, '+').replace(/_/g, '/')));
   if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
     throw new Error('token expired');
   }
@@ -80,7 +109,8 @@ async function saveUsers(kv, users) {
 
 // POST /api/sendCode
 async function handleSendCode(request, env) {
-  const { phone } = await request.json();
+  const { phone: rawPhone } = await request.json();
+  const phone = (rawPhone || '').trim();
   if (!isValidPhone(phone)) {
     return { code: 400, msg: '手机号格式不正确' };
   }
@@ -92,7 +122,11 @@ async function handleSendCode(request, env) {
 
 // POST /api/register
 async function handleRegister(request, env) {
-  const { username, password, phone, verifyCode: userCode } = await request.json();
+  const body = await request.json();
+  const username = (body.username || '').trim();
+  const password = (body.password || '').trim();
+  const phone = (body.phone || '').trim();
+  const userCode = body.verifyCode;
 
   if (!isValidUsername(username)) return { code: 400, msg: '用户名必须是2-16位字符' };
   if (!isValidPassword(password)) return { code: 400, msg: '密码长度不能少于6位' };
@@ -129,13 +163,16 @@ async function handleRegister(request, env) {
 
 // POST /api/login
 async function handleLogin(request, env) {
-  const { username, password } = await request.json();
+  const body = await request.json();
+  const username = (body.username || '').trim();
+  const password = (body.password || '').trim();
   if (!username || !password) {
     return { code: 400, msg: '请输入用户名和密码' };
   }
 
   const users = await getUsers(env.APP_DATA);
-  const user = users.find(u => u.username === username);
+  // 支持用户名或手机号登录
+  const user = users.find(u => u.username === username || u.phone === username);
   if (!user) return { code: 400, msg: '用户不存在' };
 
   let valid;
@@ -147,9 +184,12 @@ async function handleLogin(request, env) {
   }
   if (!valid) return { code: 400, msg: '密码错误' };
 
+  const secret = getJwtSecret(env);
+  if (!secret) return secretMissingResult();
+
   const token = await jwtSign(
     { id: user.id, username: user.username },
-    JWT_SECRET,
+    secret,
     7 * 86400
   );
 
@@ -158,7 +198,10 @@ async function handleLogin(request, env) {
 
 // POST /api/resetPassword
 async function handleResetPassword(request, env) {
-  const { phone, verifyCode: userCode, newPassword } = await request.json();
+  const body = await request.json();
+  const phone = (body.phone || '').trim();
+  const newPassword = (body.newPassword || '').trim();
+  const userCode = body.verifyCode;
 
   if (!isValidPhone(phone)) return { code: 400, msg: '手机号格式不正确' };
   if (!userCode) return { code: 400, msg: '请输入验证码' };
@@ -188,7 +231,9 @@ async function handleProfile(request, env) {
   }
 
   try {
-    const decoded = await jwtVerify(token, JWT_SECRET);
+    const secret = getJwtSecret(env);
+    if (!secret) return secretMissingResult();
+    const decoded = await jwtVerify(token, secret);
     const users = await getUsers(env.APP_DATA);
     const user = users.find(u => u.id === decoded.id);
     if (!user) {
@@ -199,6 +244,56 @@ async function handleProfile(request, env) {
   } catch {
     return { status: 401, body: { code: 401, msg: 'token 已过期或无效' } };
   }
+}
+
+// PUT /api/profile 修改个人资料（昵称 / 性别 / 简介 / 头像）
+async function handleUpdateProfile(request, env) {
+  const authHeader = request.headers.get('Authorization') || '';
+  const token = authHeader.replace('Bearer ', '');
+  if (!token) {
+    return { status: 401, body: { code: 401, msg: '未登录' } };
+  }
+
+  let decoded;
+  try {
+    const secret = getJwtSecret(env);
+    if (!secret) return secretMissingResult();
+    decoded = await jwtVerify(token, secret);
+  } catch {
+    return { status: 401, body: { code: 401, msg: 'token 已过期或无效' } };
+  }
+
+  const body = await request.json();
+  const { nickname, gender, bio, avatar } = body || {};
+
+  if (nickname !== undefined && !isOptionalText(nickname, 16)) {
+    return { code: 400, msg: '昵称不能超过16个字符' };
+  }
+  if (bio !== undefined && !isOptionalText(bio, 100)) {
+    return { code: 400, msg: '个人简介不能超过100个字符' };
+  }
+  if (gender !== undefined && !ALLOWED_GENDERS.includes(gender)) {
+    return { code: 400, msg: '性别参数不合法' };
+  }
+  if (avatar !== undefined && avatar !== '' && !isValidAvatar(avatar)) {
+    return { code: 400, msg: '头像格式不正确或大小超过2MB' };
+  }
+
+  const users = await getUsers(env.APP_DATA);
+  const user = users.find(u => u.id === decoded.id);
+  if (!user) {
+    return { status: 404, body: { code: 404, msg: '用户不存在' } };
+  }
+
+  if (nickname !== undefined) user.nickname = nickname.trim();
+  if (gender !== undefined) user.gender = gender;
+  if (bio !== undefined) user.bio = bio.trim();
+  if (avatar !== undefined) user.avatar = avatar;
+
+  await saveUsers(env.APP_DATA, users);
+
+  const { password, ...userInfo } = user;
+  return { code: 200, msg: '保存成功', data: userInfo };
 }
 
 // ====== 主入口 ======
@@ -220,6 +315,8 @@ export const onRequest = async ({ request, env, next }) => {
       result = await handleResetPassword(request, env);
     } else if (path === '/api/profile' && method === 'GET') {
       result = await handleProfile(request, env);
+    } else if (path === '/api/profile' && method === 'PUT') {
+      result = await handleUpdateProfile(request, env);
     } else {
       return next();
     }

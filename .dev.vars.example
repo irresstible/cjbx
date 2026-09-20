@@ -1,0 +1,4 @@
+# Wrangler 本地开发环境变量模板
+# 复制本文件为 .dev.vars（wrangler dev / wrangler pages dev 会自动读取，.dev.vars 不会被提交）
+# 线上设置：npx wrangler secret put JWT_SECRET
+JWT_SECRET=请替换为随机字符串
